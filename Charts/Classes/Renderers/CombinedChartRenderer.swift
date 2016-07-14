@@ -93,6 +93,14 @@ public class CombinedChartRenderer: ChartDataRendererBase
 
     }
     
+    public override func initBuffers()
+    {
+        for renderer in _renderers
+        {
+            renderer.initBuffers()
+        }
+    }
+    
     public override func drawData(context context: CGContext)
     {
         for renderer in _renderers
@@ -149,14 +157,6 @@ public class CombinedChartRenderer: ChartDataRendererBase
             let dataIndices = indices.filter{ $0.dataIndex == dataIndex || $0.dataIndex == -1 }
             
             renderer.drawHighlighted(context: context, indices: dataIndices)
-        }
-    }
-    
-    public override func calcXBounds(chart chart: BarLineScatterCandleBubbleChartDataProvider, xAxisModulus: Int)
-    {
-        for renderer in _renderers
-        {
-            renderer.calcXBounds(chart: chart, xAxisModulus: xAxisModulus)
         }
     }
 

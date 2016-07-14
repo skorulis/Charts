@@ -30,9 +30,9 @@ public class ChartYAxisRendererRadarChart: ChartYAxisRenderer
         self.chart = chart
     }
     
-    public override func computeAxis(yMin yMin: Double, yMax: Double)
+    public override func computeAxis(min min: Double, max: Double, inverted: Bool)
     {
-        computeAxisValues(min: yMin, max: yMax)
+        computeAxisValues(min: min, max: max)
     }
     
     public override func computeAxisValues(min yMin: Double, max yMax: Double)
@@ -95,54 +95,44 @@ public class ChartYAxisRendererRadarChart: ChartYAxisRenderer
                 yAxis.entries.removeAll(keepCapacity: false)
             }
             
-            // if the labels should only show min and max
-            if (yAxis.isShowOnlyMinMaxEnabled)
-            {
-                yAxis.entries = [Double]()
-                yAxis.entries.append(yMin)
-                yAxis.entries.append(yMax)
+            let rawCount = Double(yMin) / interval
+            var first = rawCount < 0.0 ? floor(rawCount) * interval : ceil(rawCount) * interval;
+            
+            if (first == 0.0)
+            { // Fix for IEEE negative zero case (Where value == -0.0, and 0.0 == -0.0)
+                first = 0.0
             }
-            else
+            
+            let last = ChartUtils.nextUp(floor(Double(yMax) / interval) * interval)
+            
+            var n = 0
+            for _ in first.stride(through: last, by: interval)
             {
-                let rawCount = Double(yMin) / interval
-                var first = rawCount < 0.0 ? floor(rawCount) * interval : ceil(rawCount) * interval;
+                n += 1
+            }
+            
+            if !yAxis.isAxisMaxCustom
+            {
+                n += 1
+            }
+            
+            if (yAxis.entries.count < n)
+            {
+                // Ensure stops contains at least numStops elements.
+                yAxis.entries = [Double](count: n, repeatedValue: 0.0)
+            }
+            
+            var f = first
+            var i = 0
+            while (i < n)
+            {
+                yAxis.entries[i] = Double(f)
                 
-                if (first == 0.0)
-                { // Fix for IEEE negative zero case (Where value == -0.0, and 0.0 == -0.0)
-                    first = 0.0
-                }
-                
-                let last = ChartUtils.nextUp(floor(Double(yMax) / interval) * interval)
-                
-                var n = 0
-                for _ in first.stride(through: last, by: interval)
-                {
-                    n += 1
-                }
-                
-                if !yAxis.isAxisMaxCustom
-                {
-                    n += 1
-                }
-                
-                if (yAxis.entries.count < n)
-                {
-                    // Ensure stops contains at least numStops elements.
-                    yAxis.entries = [Double](count: n, repeatedValue: 0.0)
-                }
-                
-                var f = first
-                var i = 0
-                while (i < n)
-                {
-                    yAxis.entries[i] = Double(f)
-                    
-                    f += interval
-                    i += 1
-                }
+                f += interval
+                i += 1
             }
         }
-        
+    
         if yAxis.entries[0] < yMin
         {
             // If startAtZero is disabled, and the first label is lower that the axis minimum,
@@ -196,7 +186,8 @@ public class ChartYAxisRendererRadarChart: ChartYAxisRenderer
     {
         guard let
             yAxis = yAxis,
-            chart = chart
+            chart = chart,
+            data = chart.data
             else { return }
         
         var limitLines = yAxis.limitLines
@@ -239,7 +230,7 @@ public class ChartYAxisRendererRadarChart: ChartYAxisRenderer
             
             CGContextBeginPath(context)
             
-            for j in 0 ..< chart.data!.xValCount
+            for j in 0 ..< data.maxEntryCountSet.entryCount
             {
                 let p = ChartUtils.getPosition(center: center, dist: r, angle: sliceangle * CGFloat(j) + chart.rotationAngle)
                 

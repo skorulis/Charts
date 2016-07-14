@@ -87,7 +87,7 @@
 
 - (void)setChartData
 {
-    CombinedChartData *data = [[CombinedChartData alloc] initWithXVals:months];
+    CombinedChartData *data = [[CombinedChartData alloc] init];
     data.lineData = [self generateLineData];
     data.barData = [self generateBarData];
     data.bubbleData = [self generateBubbleData];
@@ -146,7 +146,7 @@
     set.lineWidth = 2.5;
     [set setCircleColor:[UIColor colorWithRed:240/255.f green:238/255.f blue:70/255.f alpha:1.f]];
     set.fillColor = [UIColor colorWithRed:240/255.f green:238/255.f blue:70/255.f alpha:1.f];
-    set.drawCubicEnabled = YES;
+    set.mode = LineChartModeCubicBezier;
     set.drawValuesEnabled = YES;
     set.valueFont = [UIFont systemFontOfSize:10.f];
     set.valueTextColor = [UIColor colorWithRed:240/255.f green:238/255.f blue:70/255.f alpha:1.f];
@@ -206,6 +206,7 @@
 - (CandleChartData *)generateCandleData
 {
     CandleChartData *d = [[CandleChartData alloc] init];
+    d.barWidth = 0.8;
     
     NSMutableArray *entries = [[NSMutableArray alloc] init];
     
@@ -216,7 +217,6 @@
     
     CandleChartDataSet *set = [[CandleChartDataSet alloc] initWithYVals:entries label:@"Candle DataSet"];
     [set setColor:[UIColor colorWithRed:80/255.f green:80/255.f blue:80/255.f alpha:1.f]];
-    set.barSpace = 0.3;
     set.valueFont = [UIFont systemFontOfSize:10.f];
     [set setDrawValuesEnabled:NO];
     

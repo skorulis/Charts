@@ -68,6 +68,8 @@
 		5BDEDC421ABB7F73007D3A60 /* HorizontalBarChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BDEDC401ABB7F73007D3A60 /* HorizontalBarChartViewController.xib */; };
 		5BDEDC471ABB871E007D3A60 /* CombinedChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDEDC451ABB871E007D3A60 /* CombinedChartViewController.m */; };
 		5BDEDC481ABB871E007D3A60 /* CombinedChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BDEDC461ABB871E007D3A60 /* CombinedChartViewController.xib */; };
+		5BE377DE1D425151006EB34F /* MonthXAxisFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE377DD1D425151006EB34F /* MonthXAxisFormatter.m */; };
+		5BE377E71D44B7B8006EB34F /* YearXAxisFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE377E61D44B7B8006EB34F /* YearXAxisFormatter.m */; };
 		5BE7E7621C693098000A0377 /* PositiveNegativeBarChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE7E7601C693098000A0377 /* PositiveNegativeBarChartViewController.m */; };
 		5BE7E7631C693098000A0377 /* PositiveNegativeBarChartViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BE7E7611C693098000A0377 /* PositiveNegativeBarChartViewController.xib */; };
 		5BEAED121ABBFB2B0013F194 /* AnotherBarChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BEAED101ABBFB2B0013F194 /* AnotherBarChartViewController.m */; };
@@ -148,6 +150,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 5BA8EC3F1A9D14DC00CE82E1;
 			remoteInfo = "ChartsRealm-iOS";
+		};
+		5BE377DA1D42511A006EB34F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5B8E088D1C635B6D00438BAF /* ChartsRealm.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5BA899431CADB7F20012ED64;
+			remoteInfo = "ChartsRealm-OSX";
 		};
 		65B3F6561C73B4F6000983D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -258,6 +267,10 @@
 		5BDEDC441ABB871E007D3A60 /* CombinedChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CombinedChartViewController.h; sourceTree = "<group>"; };
 		5BDEDC451ABB871E007D3A60 /* CombinedChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CombinedChartViewController.m; sourceTree = "<group>"; };
 		5BDEDC461ABB871E007D3A60 /* CombinedChartViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CombinedChartViewController.xib; sourceTree = "<group>"; };
+		5BE377DC1D425151006EB34F /* MonthXAxisFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonthXAxisFormatter.h; sourceTree = "<group>"; };
+		5BE377DD1D425151006EB34F /* MonthXAxisFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonthXAxisFormatter.m; sourceTree = "<group>"; };
+		5BE377E51D44B7B8006EB34F /* YearXAxisFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YearXAxisFormatter.h; sourceTree = "<group>"; };
+		5BE377E61D44B7B8006EB34F /* YearXAxisFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YearXAxisFormatter.m; sourceTree = "<group>"; };
 		5BE7E75F1C693098000A0377 /* PositiveNegativeBarChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositiveNegativeBarChartViewController.h; sourceTree = "<group>"; };
 		5BE7E7601C693098000A0377 /* PositiveNegativeBarChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PositiveNegativeBarChartViewController.m; sourceTree = "<group>"; };
 		5BE7E7611C693098000A0377 /* PositiveNegativeBarChartViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositiveNegativeBarChartViewController.xib; sourceTree = "<group>"; };
@@ -379,6 +392,7 @@
 				5B7B3AD71C437CBC001C109B /* RealmDemoListViewController.xib */,
 				5B8EAF251AB32CF5009697AA /* DemoBaseViewController.h */,
 				5B8EAF261AB32CF5009697AA /* DemoBaseViewController.m */,
+				5BE377D41D42511A006EB34F /* Formatters */,
 				5BD47E541ABB0177008FCEC6 /* Components */,
 				5BD8F06F1AB89C7100566E05 /* Demos */,
 				65BF12571BFBC6EE005C28D9 /* RealmBase */,
@@ -413,6 +427,7 @@
 			children = (
 				5B8E08941C635B6D00438BAF /* ChartsRealm.framework */,
 				5B8E08961C635B6D00438BAF /* ChartsRealm.framework */,
+				5BE377DB1D42511A006EB34F /* ChartsRealm.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -502,6 +517,17 @@
 				5BEAED1A1ABBFB340013F194 /* StackedBarChartViewController.xib */,
 			);
 			path = Demos;
+			sourceTree = "<group>";
+		};
+		5BE377D41D42511A006EB34F /* Formatters */ = {
+			isa = PBXGroup;
+			children = (
+				5BE377DC1D425151006EB34F /* MonthXAxisFormatter.h */,
+				5BE377DD1D425151006EB34F /* MonthXAxisFormatter.m */,
+				5BE377E51D44B7B8006EB34F /* YearXAxisFormatter.h */,
+				5BE377E61D44B7B8006EB34F /* YearXAxisFormatter.m */,
+			);
+			path = Formatters;
 			sourceTree = "<group>";
 		};
 		65BF124F1BFBBF9A005C28D9 /* Frameworks */ = {
@@ -664,6 +690,13 @@
 			remoteRef = 5B8E08951C635B6D00438BAF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		5BE377DB1D42511A006EB34F /* ChartsRealm.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChartsRealm.framework;
+			remoteRef = 5BE377DA1D42511A006EB34F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		65B3F6571C73B4F6000983D0 /* Charts.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -742,6 +775,8 @@
 				5BDEDC471ABB871E007D3A60 /* CombinedChartViewController.m in Sources */,
 				5BD8F0741AB89CE500566E05 /* LineChart1ViewController.m in Sources */,
 				65BF125D1BFBC702005C28D9 /* RealmFloat.m in Sources */,
+				5BE377DE1D425151006EB34F /* MonthXAxisFormatter.m in Sources */,
+				5BE377E71D44B7B8006EB34F /* YearXAxisFormatter.m in Sources */,
 				5BEAED401ABC1AC60013F194 /* SinusBarChartViewController.m in Sources */,
 				5BE7E7621C693098000A0377 /* PositiveNegativeBarChartViewController.m in Sources */,
 				5B7B3AE91C4445E7001C109B /* RealmScatterChartViewController.m in Sources */,

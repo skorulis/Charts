@@ -55,29 +55,40 @@ public class ChartXAxisRendererRadarChart: ChartXAxisRenderer
         let center = chart.centerOffsets
         
         let modulus = xAxis.axisLabelModulus
-        for i in 0.stride(to: xAxis.values.count, by: modulus)
+        for i in 0.stride(to: xAxis.entryCount, by: modulus)
         {
-            let label = xAxis.values[i]
-            
-            if (label == nil)
-            {
-                continue
-            }
+            let label = xAxis.valueFormatter?.stringForValue(xAxis.entries[i], axis: xAxis) ?? ""
             
             let angle = (sliceangle * CGFloat(i) + chart.rotationAngle) % 360.0
             
             let p = ChartUtils.getPosition(center: center, dist: CGFloat(chart.yRange) * factor + xAxis.labelRotatedWidth / 2.0, angle: angle)
             
-            drawLabel(context: context, label: label!, xIndex: i, x: p.x, y: p.y - xAxis.labelRotatedHeight / 2.0, attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor], anchor: drawLabelAnchor, angleRadians: labelRotationAngleRadians)
+            drawLabel(context: context,
+                      formattedLabel: label,
+                      x: p.x,
+                      y: p.y - xAxis.labelRotatedHeight / 2.0,
+                      attributes: [NSFontAttributeName: labelFont, NSForegroundColorAttributeName: labelTextColor],
+                      anchor: drawLabelAnchor,
+                      angleRadians: labelRotationAngleRadians)
         }
     }
     
-    public func drawLabel(context context: CGContext, label: String, xIndex: Int, x: CGFloat, y: CGFloat, attributes: [String: NSObject], anchor: CGPoint, angleRadians: CGFloat)
+    public func drawLabel(
+        context context: CGContext,
+                formattedLabel: String,
+                x: CGFloat,
+                y: CGFloat,
+                attributes: [String: NSObject],
+                anchor: CGPoint,
+                angleRadians: CGFloat)
     {
-        guard let xAxis = xAxis else { return }
-        
-        let formattedLabel = xAxis.valueFormatter?.stringForXValue(xIndex, original: label, viewPortHandler: viewPortHandler) ?? label
-        ChartUtils.drawText(context: context, text: formattedLabel, point: CGPoint(x: x, y: y), attributes: attributes, anchor: anchor, angleRadians: angleRadians)
+        ChartUtils.drawText(
+            context: context,
+            text: formattedLabel,
+            point: CGPoint(x: x, y: y),
+            attributes: attributes,
+            anchor: anchor,
+            angleRadians: angleRadians)
     }
     
     public override func renderLimitLines(context context: CGContext)

@@ -21,162 +21,18 @@ import CoreGraphics
 
 public class ChartYAxisRenderer: ChartAxisRendererBase
 {
-    public var yAxis: ChartYAxis?
+    // FIXME: Remove yAxis property on Android
     
-    public init(viewPortHandler: ChartViewPortHandler, yAxis: ChartYAxis, transformer: ChartTransformer!)
+    public init(viewPortHandler: ChartViewPortHandler, yAxis: ChartYAxis, transformer: ChartTransformer)
     {
-        super.init(viewPortHandler: viewPortHandler, transformer: transformer)
-        
-        self.yAxis = yAxis
-    }
-    
-    /// Computes the axis values.
-    public func computeAxis(yMin yMin: Double, yMax: Double)
-    {
-        guard let yAxis = yAxis else { return }
-        var yMin = yMin, yMax = yMax
-        
-        // calculate the starting and entry point of the y-labels (depending on
-        // zoom / contentrect bounds)
-        if (viewPortHandler.contentWidth > 10.0 && !viewPortHandler.isFullyZoomedOutY)
-        {
-            let p1 = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentLeft, y: viewPortHandler.contentTop))
-            let p2 = transformer.getValueByTouchPoint(CGPoint(x: viewPortHandler.contentLeft, y: viewPortHandler.contentBottom))
-            
-            if (!yAxis.isInverted)
-            {
-                yMin = Double(p2.y)
-                yMax = Double(p1.y)
-            }
-            else
-            {
-                yMin = Double(p1.y)
-                yMax = Double(p2.y)
-            }
-        }
-        
-        computeAxisValues(min: yMin, max: yMax)
-    }
-    
-    /// Sets up the y-axis labels. Computes the desired number of labels between
-    /// the two given extremes. Unlike the papareXLabels() method, this method
-    /// needs to be called upon every refresh of the view.
-    public func computeAxisValues(min min: Double, max: Double)
-    {
-        guard let yAxis = yAxis else { return }
-        
-        let yMin = min
-        let yMax = max
-        
-        let labelCount = yAxis.labelCount
-        let range = abs(yMax - yMin)
-    
-        if (labelCount == 0 || range <= 0)
-        {
-            yAxis.entries = [Double]()
-            return
-        }
-        
-        // Find out how much spacing (in y value space) between axis values
-        let rawInterval = range / Double(labelCount)
-        var interval = ChartUtils.roundToNextSignificant(number: Double(rawInterval))
-        
-        // If granularity is enabled, then do not allow the interval to go below specified granularity.
-        // This is used to avoid repeated values when rounding values for display.
-        if yAxis.granularityEnabled
-        {
-            interval = interval < yAxis.granularity ? yAxis.granularity : interval
-        }
-        
-        // Normalize interval
-        let intervalMagnitude = ChartUtils.roundToNextSignificant(number: pow(10.0, Double(Int(log10(interval)))))
-        let intervalSigDigit = Int(interval / intervalMagnitude)
-        if (intervalSigDigit > 5)
-        {
-            // Use one order of magnitude higher, to avoid intervals like 0.9 or 90
-            interval = floor(10.0 * Double(intervalMagnitude))
-        }
-        
-        // force label count
-        if yAxis.isForceLabelsEnabled
-        {
-            let step = Double(range) / Double(labelCount - 1)
-            
-            if yAxis.entries.count < labelCount
-            {
-                // Ensure stops contains at least numStops elements.
-                yAxis.entries.removeAll(keepCapacity: true)
-            }
-            else
-            {
-                yAxis.entries = [Double]()
-                yAxis.entries.reserveCapacity(labelCount)
-            }
-            
-            var v = yMin
-            
-            for _ in 0 ..< labelCount
-            {
-                yAxis.entries.append(v)
-                v += step
-            }
-            
-        }
-        else
-        {
-            // no forced count
-            
-            // if the labels should only show min and max
-            if (yAxis.isShowOnlyMinMaxEnabled)
-            {
-                yAxis.entries = [yMin, yMax]
-            }
-            else
-            {
-                let first = interval == 0.0 ? 0.0 : ceil(Double(yMin) / interval) * interval
-                let last = interval == 0.0 ? 0.0 : ChartUtils.nextUp(floor(Double(yMax) / interval) * interval)
-                
-                var n = 0
-                if interval != 0.0 && last != first
-                {
-                    for _ in first.stride(through: last, by: interval)
-                    {
-                        n += 1
-                    }
-                }
-                
-                if (yAxis.entries.count < n)
-                {
-                    // Ensure stops contains at least numStops elements.
-                    yAxis.entries = [Double](count: n, repeatedValue: 0.0)
-                }
-                else if (yAxis.entries.count > n)
-                {
-                    yAxis.entries.removeRange(n..<yAxis.entries.count)
-                }
-                
-                var f = first
-                var i = 0
-                while (i < n)
-                {
-                    if (f == 0.0)
-                    { // Fix for IEEE negative zero case (Where value == -0.0, and 0.0 == -0.0)
-                        f = 0.0
-                    }
-                    
-                    yAxis.entries[i] = Double(f)
-                    
-                    f += interval
-                    i += 1
-                }
-            }
-        }
+        super.init(viewPortHandler: viewPortHandler, transformer: transformer, axis: yAxis)
     }
     
     /// draws the y-axis labels to the screen
     public override func renderAxisLabels(context context: CGContext)
     {
-        guard let yAxis = yAxis else { return }
+        guard let yAxis = self.axis as? ChartYAxis
+            else { return }
         
         if (!yAxis.isEnabled || !yAxis.isDrawLabelsEnabled)
         {
@@ -228,7 +84,8 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     
     public override func renderAxisLine(context context: CGContext)
     {
-        guard let yAxis = yAxis else { return }
+        guard let yAxis = self.axis as? ChartYAxis
+            else { return }
         
         if (!yAxis.isEnabled || !yAxis.drawAxisLineEnabled)
         {
@@ -271,7 +128,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     /// draws the y-labels on the specified x-position
     internal func drawYLabels(context context: CGContext, fixedPosition: CGFloat, offset: CGFloat, textAlign: NSTextAlignment)
     {
-        guard let yAxis = yAxis else { return }
+        guard let
+            yAxis = self.axis as? ChartYAxis,
+            transformer = self.transformer
+            else { return }
         
         let labelFont = yAxis.labelFont
         let labelTextColor = yAxis.labelTextColor
@@ -304,7 +164,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     
     public override func renderGridLines(context context: CGContext)
     {
-        guard let yAxis = yAxis else { return }
+        guard let
+            yAxis = self.axis as? ChartYAxis,
+            transformer = self.transformer
+            else { return }
         
         if !yAxis.isEnabled
         {
@@ -374,7 +237,7 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
         y2: CGFloat)
     {
         guard let
-            yAxis = yAxis,
+            yAxis = self.axis as? ChartYAxis,
             zeroLineColor = yAxis.zeroLineColor
             else { return }
         
@@ -403,7 +266,10 @@ public class ChartYAxisRenderer: ChartAxisRendererBase
     
     public override func renderLimitLines(context context: CGContext)
     {
-        guard let yAxis = yAxis else { return }
+        guard let
+            yAxis = self.axis as? ChartYAxis,
+            transformer = self.transformer
+            else { return }
         
         var limitLines = yAxis.limitLines
         

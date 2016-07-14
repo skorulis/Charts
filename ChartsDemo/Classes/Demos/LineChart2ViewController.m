@@ -67,11 +67,10 @@
     _chartView.legend.position = ChartLegendPositionBelowChartLeft;
     
     ChartXAxis *xAxis = _chartView.xAxis;
-    xAxis.labelFont = [UIFont systemFontOfSize:12.f];
+    xAxis.labelFont = [UIFont systemFontOfSize:11.f];
     xAxis.labelTextColor = UIColor.whiteColor;
     xAxis.drawGridLinesEnabled = NO;
     xAxis.drawAxisLineEnabled = NO;
-    xAxis.spaceBetweenLabels = 1.0;
     
     ChartYAxis *leftAxis = _chartView.leftAxis;
     leftAxis.labelTextColor = [UIColor colorWithRed:51/255.f green:181/255.f blue:229/255.f alpha:1.f];
@@ -114,13 +113,6 @@
 
 - (void)setDataCount:(int)count range:(double)range
 {
-    NSMutableArray *xVals = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < count; i++)
-    {
-        [xVals addObject:[@(i) stringValue]];
-    }
-    
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < count; i++)
@@ -147,7 +139,6 @@
         set2 = (LineChartDataSet *)_chartView.data.dataSets[1];
         set1.yVals = yVals1;
         set2.yVals = yVals2;
-        _chartView.data.xValsObjc = xVals;
         [_chartView.data notifyDataChanged];
         [_chartView notifyDataSetChanged];
     }
@@ -179,7 +170,7 @@
         [dataSets addObject:set2];
         [dataSets addObject:set1];
         
-        LineChartData *data = [[LineChartData alloc] initWithXVals:xVals dataSets:dataSets];
+        LineChartData *data = [[LineChartData alloc] initWithDataSets:dataSets];
         [data setValueTextColor:UIColor.whiteColor];
         [data setValueFont:[UIFont systemFontOfSize:9.f]];
         

@@ -27,28 +27,20 @@ public class ChartXAxis: ChartAxisBase
         case BottomInside
     }
     
-    public var values = [String?]()
-    
-    /// width of the x-axis labels in pixels - this is automatically calculated by the computeAxis() methods in the renderers
+    /// width of the x-axis labels in pixels - this is automatically calculated by the `computeSize()` methods in the renderers
     public var labelWidth = CGFloat(1.0)
     
-    /// height of the x-axis labels in pixels - this is automatically calculated by the computeAxis() methods in the renderers
+    /// height of the x-axis labels in pixels - this is automatically calculated by the `computeSize()` methods in the renderers
     public var labelHeight = CGFloat(1.0)
     
-    /// width of the (rotated) x-axis labels in pixels - this is automatically calculated by the computeAxis() methods in the renderers
+    /// width of the (rotated) x-axis labels in pixels - this is automatically calculated by the `computeSize()` methods in the renderers
     public var labelRotatedWidth = CGFloat(1.0)
     
-    /// height of the (rotated) x-axis labels in pixels - this is automatically calculated by the computeAxis() methods in the renderers
+    /// height of the (rotated) x-axis labels in pixels - this is automatically calculated by the `computeSize()` methods in the renderers
     public var labelRotatedHeight = CGFloat(1.0)
     
     /// This is the angle for drawing the X axis labels (in degrees)
     public var labelRotationAngle = CGFloat(0.0)
-    
-    /// the space that should be left out (in characters) between the x-axis labels
-    /// This only applies if the number of labels that will be skipped in between drawn axis labels is not custom set.
-    /// 
-    /// **default**: 4
-    public var spaceBetweenLabels = Int(4)
     
     /// the modulus that indicates if a value at a specified index in an array(list) for the x-axis-labels is drawn or not. Draw when `(index % modulus) == 0`.
     public var axisLabelModulus = Int(1)
@@ -64,23 +56,6 @@ public class ChartXAxis: ChartAxisBase
 
     /// if set to true, the chart will avoid that the first and last label entry in the chart "clip" off the edge of the chart
     public var avoidFirstLastClippingEnabled = false
-    
-    /// Custom formatter for adjusting x-value strings
-    private var _xAxisValueFormatter: ChartXAxisValueFormatter = ChartDefaultXAxisValueFormatter()
-    
-    /// Custom XValueFormatter for the data object that allows custom-formatting of all x-values before rendering them.
-    /// Provide null to reset back to the default formatting.
-    public var valueFormatter: ChartXAxisValueFormatter?
-    {
-        get
-        {
-            return _xAxisValueFormatter
-        }
-        set
-        {
-            _xAxisValueFormatter = newValue ?? ChartDefaultXAxisValueFormatter()
-        }
-    }
     
     /// the position of the x-labels relative to the chart
     public var labelPosition = LabelPosition.Top
@@ -105,23 +80,6 @@ public class ChartXAxis: ChartAxisBase
         super.init()
         
         self.yOffset = 4.0;
-    }
-
-    public override func getLongestLabel() -> String
-    {
-        var longest = ""
-        
-        for i in 0 ..< values.count
-        {
-            let text = values[i]
-            
-            if (text != nil && longest.characters.count < (text!).characters.count)
-            {
-                longest = text!
-            }
-        }
-        
-        return longest
     }
     
     public var isAvoidFirstLastClippingEnabled: Bool
@@ -156,11 +114,5 @@ public class ChartXAxis: ChartAxisBase
     public var isAxisModulusCustom: Bool
     {
         return _isAxisModulusCustom
-    }
-    
-    public var valuesObjc: [NSObject]
-    {
-        get { return ChartUtils.bridgedObjCGetStringArray(swift: values); }
-        set { self.values = ChartUtils.bridgedObjCGetStringArray(objc: newValue); }
     }
 }

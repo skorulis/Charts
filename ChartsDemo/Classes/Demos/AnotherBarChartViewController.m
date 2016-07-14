@@ -57,7 +57,6 @@
     
     ChartXAxis *xAxis = _chartView.xAxis;
     xAxis.labelPosition = XAxisLabelPositionBottom;
-    xAxis.spaceBetweenLabels = 0.0;
     xAxis.drawGridLinesEnabled = NO;
     
     _chartView.leftAxis.drawGridLinesEnabled = NO;
@@ -98,18 +97,11 @@
         [yVals addObject:[[BarChartDataEntry alloc] initWithValue:val xIndex:i]];
     }
     
-    NSMutableArray *xVals = [[NSMutableArray alloc] init];
-    for (int i = 0; i < count; i++)
-    {
-        [xVals addObject:[@((int)((BarChartDataEntry *)yVals[i]).value) stringValue]];
-    }
-    
     BarChartDataSet *set1 = nil;
     if (_chartView.data.dataSetCount > 0)
     {
         set1 = (BarChartDataSet *)_chartView.data.dataSets[0];
         set1.yVals = yVals;
-        _chartView.data.xValsObjc = xVals;
         [_chartView notifyDataSetChanged];
     }
     else
@@ -121,7 +113,7 @@
         NSMutableArray *dataSets = [[NSMutableArray alloc] init];
         [dataSets addObject:set1];
         
-        BarChartData *data = [[BarChartData alloc] initWithXVals:xVals dataSets:dataSets];
+        BarChartData *data = [[BarChartData alloc] initWithDataSets:dataSets];
         
         _chartView.data = data;
     }

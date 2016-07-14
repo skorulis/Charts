@@ -65,6 +65,8 @@
     
     ChartXAxis *xAxis = _chartView.xAxis;
     xAxis.labelFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.f];
+    xAxis.granularity = 1.f;
+    xAxis.centerAxisLabelsEnabled = YES;
     
     ChartYAxis *leftAxis = _chartView.leftAxis;
     leftAxis.labelFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.f];
@@ -99,20 +101,20 @@
 
 - (void)setDataCount:(int)count range:(double)range
 {
-    NSMutableArray *xVals = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < count; i++)
-    {
-        [xVals addObject:[@(i + 1990) stringValue]];
-    }
-    
+    float groupSpace = 0.04f;
+    float barSpace = 0.02f;
+    float barWidth = 0.3f;
+
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals2 = [[NSMutableArray alloc] init];
     NSMutableArray *yVals3 = [[NSMutableArray alloc] init];
     
     double mult = range * 1000.f;
     
-    for (int i = 0; i < count; i++)
+    int startYear = 1980;
+    int endYear = startYear + _sliderX.value;
+
+    for (int i = startYear; i < endYear; i++)
     {
         double val = (double) (arc4random_uniform(mult) + 3.0);
         [yVals1 addObject:[[BarChartDataEntry alloc] initWithValue:val xIndex:i]];
@@ -133,7 +135,12 @@
         set1.yVals = yVals1;
         set2.yVals = yVals2;
         set3.yVals = yVals3;
-        _chartView.data.xValsObjc = xVals;
+        
+        _chartView.barData.barWidth = barWidth;
+        [_chartView.barData groupBarsFromX: startYear groupSpace: groupSpace barSpace: barSpace];
+        _chartView.xAxis.axisMinValue = startYear;
+        _chartView.xAxis.axisMaxValue = [_chartView.barData intervalWidthWithGroupSpace:groupSpace barSpace: barSpace] * _sliderX.value + startYear;
+        
         [_chartView notifyDataSetChanged];
     }
     else
@@ -152,9 +159,12 @@
         [dataSets addObject:set2];
         [dataSets addObject:set3];
         
-        BarChartData *data = [[BarChartData alloc] initWithXVals:xVals dataSets:dataSets];
-        data.groupSpace = 0.8;
+        BarChartData *data = [[BarChartData alloc] initWithDataSets:dataSets];
         [data setValueFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:10.f]];
+        
+        [_chartView.barData groupBarsFromX:0.0 groupSpace: groupSpace barSpace: barSpace];
+        _chartView.xAxis.axisMinValue = 0.0;
+        _chartView.xAxis.axisMaxValue = [_chartView.barData intervalWidthWithGroupSpace:groupSpace barSpace: barSpace] * (double)count;
         
         _chartView.data = data;
     }
@@ -169,7 +179,11 @@
 
 - (IBAction)slidersValueChanged:(id)sender
 {
-    _sliderTextX.text = [@((int)_sliderX.value + 1) stringValue];
+    int startYear = 1980;
+    int endYear = startYear + _sliderX.value;
+    tvX.setText(startYear + "\n-" + endYear);
+
+    _sliderTextX.text = [NSString stringWithFormat:@"%d-%d", startYear, endYear];
     _sliderTextY.text = [@((int)_sliderY.value) stringValue];
     
     [self updateChartData];

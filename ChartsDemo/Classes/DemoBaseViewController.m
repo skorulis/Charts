@@ -45,11 +45,6 @@
 {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    months = @[
-        @"Jan", @"Feb", @"Mar", @"Apr", @"May", @"Jun", @"Jul", @"Aug", @"Sep",
-        @"Oct", @"Nov", @"Dec"
-        ];
-    
     parties = @[
         @"Party A", @"Party B", @"Party C", @"Party D", @"Party E", @"Party F",
         @"Party G", @"Party H", @"Party I", @"Party J", @"Party K", @"Party L",
