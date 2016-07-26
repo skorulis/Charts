@@ -483,12 +483,14 @@ public class PieChartRenderer: ChartDataRendererBase
                         
                         if j < data.xValCount && data.xVals[j] != nil
                         {
+                            let p = NSMutableParagraphStyle();
+                            p.alignment = .Center;
                             ChartUtils.drawText(
                                 context: context,
                                 text: data.xVals[j]!,
                                 point: CGPoint(x: x, y: y + lineHeight),
                                 align: .Center,
-                                attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: dataSet.valueTextColorAt(j)]
+                                attributes: [NSFontAttributeName: valueFont, NSForegroundColorAttributeName: dataSet.valueTextColorAt(j),NSParagraphStyleAttributeName : p]
                             )
                         }
                     }
